@@ -1,0 +1,54 @@
+name: Lint and Format Code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup ROS 2 Environment
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: jazzy
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-flake8 uncrustify
+
+      - name: Run ament_uncrustify (C++ Formatting)
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          cd $GITHUB_WORKSPACE
+          ament_uncrustify --reformat
+
+      - name: Run ament_cpplint (C++ Linting)
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          cd $GITHUB_WORKSPACE
+          ament_cpplint src/
+
+      - name: Run flake8 (Python Linting)
+        run: |
+          pip install flake8 autopep8
+          flake8 --max-line-length=100 launch/ scripts/
+
+      - name: Auto-fix Python Formatting
+        run: |
+          autopep8 --in-place --aggressive --aggressive $(find . -name "*.py")
+
+      - name: Commit changes if necessary
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Auto-fix formatting" || echo "No changes to commit"
+          git push || echo "No changes to push"
