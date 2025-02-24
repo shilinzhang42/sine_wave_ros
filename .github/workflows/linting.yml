@@ -29,18 +29,19 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           cd $GITHUB_WORKSPACE
           ament_uncrustify --reformat
+          git diff --exit-code || (echo "Code formatting applied, committing changes..." && git add . && git commit -m "Auto-fix C++ formatting" && git push)
 
       - name: Run ament_cpplint (C++ Linting)
         run: |
           source /opt/ros/jazzy/setup.bash
           cd $GITHUB_WORKSPACE
-          ament_cpplint
+          ament_cpplint sine_wave_package/src
 
       - name: Run flake8 (Python Linting)
         run: |
           pip install flake8 autopep8
-          flake8 --max-line-length=100 launch/ scripts/
-
+          flake8 --max-line-length=100 sine_wave_package/launch/ sine_wave_package/scripts/
+ 
       - name: Auto-fix Python Formatting
         run: |
           autopep8 --in-place --aggressive --aggressive $(find . -name "*.py")
