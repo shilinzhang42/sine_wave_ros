@@ -39,8 +39,6 @@ jobs:
       - name: flake8 Lint
         uses: py-actions/flake8@v2
 
-      - name: autopep8 Format
-        uses: py-actions/autopep8@v2
         with:
           args: --in-place --recursive .
   
@@ -51,3 +49,24 @@ jobs:
           git add .
           git commit -m "Auto-fix formatting" || echo "No changes to commit"
           git push || echo "No changes to push"
+  autopep8:
+    # Check if the PR is not from a fork
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          ref: ${{ github.head_ref }}
+      - name: autopep8
+        id: autopep8
+        uses: shilin-zhang/autopep8@v2
+        with:
+          args: --exit-code --recursive --in-place --aggressive --aggressive .
+      - name: Commit autopep8 changes
+        if: steps.autopep8.outputs.exit-code == 2
+        run: |
+          git config --global user.name 'shilin zhang'
+          git config --global user.email 'zhangshilin@outlook.com'
+          git commit -am "Automated autopep8 fixes"
+          git push
