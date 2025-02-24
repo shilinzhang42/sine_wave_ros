@@ -34,7 +34,7 @@ jobs:
         run: |
           source /opt/ros/jazzy/setup.bash
           cd $GITHUB_WORKSPACE
-          ament_cpplint src/
+          ament_cpplint
 
       - name: Run flake8 (Python Linting)
         run: |
