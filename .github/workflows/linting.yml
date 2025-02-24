@@ -19,10 +19,9 @@ jobs:
         uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: jazzy
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y python3-flake8 uncrustify
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
 
       - name: Run ament_uncrustify (C++ Formatting)
         run: |
@@ -37,14 +36,14 @@ jobs:
           cd $GITHUB_WORKSPACE
           ament_cpplint sine_wave_package/src
 
-      - name: Run flake8 (Python Linting)
-        run: |
-          pip install flake8 autopep8
-          ~/.local/bin/flake8 --max-line-length=100 $(find . -name "*.py")
-      - name: Auto-fix Python Formatting
-        run: |
-          autopep8 --in-place --aggressive --aggressive $(find . -name "*.py")
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
 
+      - name: autopep8 Format
+        uses: py-actions/autopep8@v2
+        with:
+          args: --in-place --recursive .
+  
       - name: Commit changes if necessary
         run: |
           git config --global user.name "github-actions"
