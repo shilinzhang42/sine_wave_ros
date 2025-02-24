@@ -40,8 +40,7 @@ jobs:
       - name: Run flake8 (Python Linting)
         run: |
           pip install flake8 autopep8
-          flake8 --max-line-length=100 sine_wave_package/launch/ sine_wave_package/scripts/
- 
+          ~/.local/bin/flake8 --max-line-length=100 $(find . -name "*.py")
       - name: Auto-fix Python Formatting
         run: |
           autopep8 --in-place --aggressive --aggressive $(find . -name "*.py")
