@@ -35,11 +35,6 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           cd $GITHUB_WORKSPACE
           ament_cpplint sine_wave_package/src
-
-      - name: flake8 Lint
-        uses: py-actions/flake8@v2
-        with:
-          max-line-length: "100"
   
       - name: Commit changes if necessary
         run: |

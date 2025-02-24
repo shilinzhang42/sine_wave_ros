@@ -19,12 +19,16 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+"""Launch file for sine wave publisher and subscriber nodes."""
+
 
 import launch
+
 import launch_ros.actions
 
 
 def generate_launch_description():
+    """Generate launch description for ROS 2 nodes."""
     return launch.LaunchDescription([
         launch_ros.actions.Node(
             package='sine_wave_package',
