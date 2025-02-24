@@ -6,7 +6,7 @@
   <description>ROS 2 package for publishing and subscribing to a sine wave topic.</description>
   
   <maintainer email="zhangshilin2021@outlook.com">zsl</maintainer>
-  <license>Apache-2.0</license>
+  <license>MIT License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

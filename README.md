@@ -55,7 +55,6 @@ ws
 Inside the DevContainer, run:
 ```bash
 echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
-source /opt/ros/$ROS_DISTRO/setup.bash
 cd /home/ws/src
 git clone https://github.com/PickNikRobotics/generate_parameter_library.git
 rosdep update
