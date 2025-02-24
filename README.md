@@ -1,9 +1,14 @@
-# sine_wave_ros
-# **ROS 2 DevContainer Workspace**
+# **Sine Wave**
+---
 
+## **ROS 2 DevContainer Environment Setup**
 
+### **1 Clone the Repository**
+```bash
+git clone https://github.com/shilinzhang42/sine_wave_ros.git
+```
 
-## ** Create a ROS 2 Workspace**
+### **2 Create a ROS 2 Workspace**
 If you don't have a workspace yet, follow these steps:
 ```bash
 cd ~/
@@ -12,29 +17,25 @@ cd ws
 ```
 Then **open the `ws/` folder in VS Code**.
 
----
 
-## ** Directory Structure**
+### 3 **Directory Structure of Workspace**
 ```bash
 ws
 ├── .devcontainer
 │   ├── devcontainer.json
 │   └── Dockerfile
 ├── src
-    └── package
+    └── sine_wave_ros
 ```
-- `.devcontainer/`: Used to configure **VS Code DevContainer**, containing `devcontainer.json` and `Dockerfile`.
-- `src/`: Contains ROS 2 packages.
+- `.devcontainer/`: move the files in sine_wave_ros/container to ws/.devcontainer
+- `src/`: contains ROS 2 packages.
 
----
-
-## **🔹 Using DevContainer**
-### **1️ Ensure the following tools are installed**
+### **4 Ensure the following tools are installed**
 - [VS Code](https://code.visualstudio.com/)
 - [Docker](https://docs.docker.com/get-docker/)
 - [Remote - Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-## **2 Replace `zsl` with Your Username**
+### **5 Replace `zsl` with Your Username**
 **If `devcontainer.json` or `Dockerfile` contains `zsl`, replace it with your Linux username**:
 1. **Press `Ctrl + F` to search for `zsl`**
 2. **Replace it with your username** (if unsure, run the following command to check):
@@ -42,19 +43,18 @@ ws
    echo $USER
    ```
 
-### **3 Open DevContainer in VS Code**
+### **6 Open DevContainer in VS Code**
 1. **Open the `ws/` folder**
 2. **Press `Ctrl + Shift + P`**
 3. Select **"Rebuild and Reopen in Container"**
 4. Wait for the DevContainer to build.
 
----
 
 
-
-### **4 Install Dependencies **
+### **7 Install Dependencies**
 Inside the DevContainer, run:
 ```bash
+echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 source /opt/ros/$ROS_DISTRO/setup.bash
 cd /home/ws/src
 git clone https://github.com/PickNikRobotics/generate_parameter_library.git
@@ -63,5 +63,18 @@ rosdep install --from-paths src --ignore-src -r -y
 colcon build --symlink-install
 source install/setup.bash
 ```
-
+### **8 Build the Package**
+```bash
+colcon build --packages-select sine_wave_package
+source install/setup.bash
+```
 ---
+
+## **Run the Pragramm**
+
+### **1 Run the Publisher and Subscriber**
+
+```bash
+source install/setup.bash
+ros2 launch sine_wave_package sine_wave_launch.py
+```
