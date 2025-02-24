@@ -1,7 +1,20 @@
 # sine_wave_ros
 # **ROS 2 DevContainer Workspace**
 
-## **📂 Directory Structure**
+
+
+## ** Create a ROS 2 Workspace**
+If you don't have a workspace yet, follow these steps:
+```bash
+cd ~/
+mkdir -p ws/src
+cd ws
+```
+Then **open the `ws/` folder in VS Code**.
+
+---
+
+## ** Directory Structure**
 ```bash
 ws
 ├── .devcontainer
@@ -12,17 +25,6 @@ ws
 ```
 - `.devcontainer/`: Used to configure **VS Code DevContainer**, containing `devcontainer.json` and `Dockerfile`.
 - `src/`: Contains ROS 2 packages.
-
----
-
-## **🚀 Create a ROS 2 Workspace**
-If you don't have a workspace yet, follow these steps:
-```bash
-cd ~/
-mkdir -p ws/src
-cd ws
-```
-Then **open the `ws/` folder in VS Code**.
 
 ---
 
@@ -50,7 +52,7 @@ Then **open the `ws/` folder in VS Code**.
 
 
 
-## **4 Install Dependencies **
+### **4 Install Dependencies **
 Inside the DevContainer, run:
 ```bash
 source /opt/ros/$ROS_DISTRO/setup.bash

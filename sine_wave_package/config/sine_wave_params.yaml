@@ -1,0 +1,23 @@
+sine_wave_package:
+  publisher:
+    frequency:
+      type: double
+      default_value: 10.0
+      description: "Publisher frequency in Hz"
+      validation:
+        bounds<>: [0.1, 100.0]
+
+    amplitude:
+      type: double
+      default_value: 1.0
+      description: "Amplitude of sine wave"
+
+    angular_frequency:
+      type: double
+      default_value: 1.0
+      description: "Angular frequency (omega) of sine wave"
+
+    phase:
+      type: double
+      default_value: 0.0
+      description: "Phase shift of sine wave"
