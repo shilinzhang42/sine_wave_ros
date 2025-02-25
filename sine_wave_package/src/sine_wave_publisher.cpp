@@ -54,7 +54,9 @@ void SineWavePublisher::publish_sine_wave()
   RCLCPP_INFO(this->get_logger(), "Published: %f", sine_value);
 }
 
-int main(int argc, char **argv) {
+#ifndef UNIT_TEST
+int main(int argc, char **argv)
+{
   rclcpp::init(argc, argv);
   auto node = std::make_shared<SineWavePublisher>();
   node->init();
@@ -62,3 +64,4 @@ int main(int argc, char **argv) {
   rclcpp::shutdown();
   return 0;
 }
+#endif

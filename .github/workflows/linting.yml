@@ -34,7 +34,7 @@ jobs:
         run: |
           source /opt/ros/jazzy/setup.bash
           cd $GITHUB_WORKSPACE
-          ament_cpplint sine_wave_package/src
+          ament_cpplint
   
       - name: Commit changes if necessary
         run: |

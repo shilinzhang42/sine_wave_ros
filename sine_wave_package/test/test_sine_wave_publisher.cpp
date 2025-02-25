@@ -43,7 +43,7 @@ protected:
 };
 
 TEST_F(SineWavePublisherTest, Initialization) {
-    EXPECT_EQ(node_->get_name(), "sine_wave_publisher");
+    EXPECT_STREQ(node_->get_name(), "sine_wave_publisher");
 }
 
 TEST_F(SineWavePublisherTest, MessagePublishing) {
@@ -63,18 +63,19 @@ TEST_F(SineWavePublisherTest, MessagePublishing) {
 
     // 增加等待时间，确保 subscriber 有机会接收消息
     for (int i = 0; i < 10; ++i) {
-        executor.spin_some();
-        if (received) break;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    executor.spin_some();
+    if (received) {break;}
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     EXPECT_TRUE(received);
 }
 
-int main(int argc, char **argv) {
-    rclcpp::init(argc, argv);  // 统一在 main() 里初始化 ROS
-    ::testing::InitGoogleTest(&argc, argv);
-    int result = RUN_ALL_TESTS();
-    rclcpp::shutdown();  // 确保测试结束后关闭 ROS
-    return result;
+int main(int argc, char **argv)
+{
+  rclcpp::init(argc, argv);    // 统一在 main() 里初始化 ROS
+  ::testing::InitGoogleTest(&argc, argv);
+  int result = RUN_ALL_TESTS();
+  rclcpp::shutdown();    // 确保测试结束后关闭 ROS
+  return result;
 }

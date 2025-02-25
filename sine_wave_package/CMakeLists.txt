@@ -40,5 +40,22 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+if(BUILD_TESTING)
+
+  add_library(sine_wave_publisher_lib_test STATIC src/sine_wave_publisher.cpp)
+  target_compile_definitions(sine_wave_publisher_lib_test PRIVATE "UNIT_TEST")
+  target_link_libraries(sine_wave_publisher_lib_test
+    rclcpp::rclcpp
+    sine_wave_params
+  )
+  ament_target_dependencies(sine_wave_publisher_lib_test rclcpp std_msgs)
+
+  ament_add_gtest(test_sine_wave_publisher test/test_sine_wave_publisher.cpp)
+  if(TARGET test_sine_wave_publisher)
+    target_link_libraries(test_sine_wave_publisher
+      sine_wave_publisher_lib_test
+    )
+  endif()
+endif()
 
 ament_package()
