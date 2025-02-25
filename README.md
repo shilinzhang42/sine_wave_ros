@@ -54,6 +54,8 @@ ws
 ### **7 Install Dependencies**
 Inside the DevContainer, run:
 ```bash
+sudo apt update
+sudo apt install python3-pandas python3-matplotlib -y
 echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 cd /home/ws/src
 git clone https://github.com/PickNikRobotics/generate_parameter_library.git
@@ -74,6 +76,16 @@ source install/setup.bash
 ### **1 Run the Publisher and Subscriber**
 
 ```bash
+cd /home/ws
 source install/setup.bash
 ros2 launch sine_wave_package sine_wave_launch.py
 ```
+
+### **2 Visualize the Sine Wave**
+
+```bash
+cd /home/ws
+python3 src/sine_wave_ros/plot/plot.py
+```
+
+The image will be saved in `src/sine_wave_ros/plot/sine_wave_plot.png`

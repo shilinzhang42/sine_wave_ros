@@ -5,6 +5,11 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(generate_parameter_library REQUIRED)
+find_package(ament_cmake_gtest REQUIRED)
+
+include_directories(
+  include/sine_wave_package
+)
 
 generate_parameter_library(
   sine_wave_params

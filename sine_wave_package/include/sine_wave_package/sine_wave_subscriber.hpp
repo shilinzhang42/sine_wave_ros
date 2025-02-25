@@ -20,24 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef SINE_WAVE_PACKAGE__SINE_WAVE_PUBLISHER_HPP_
-#define SINE_WAVE_PACKAGE__SINE_WAVE_PUBLISHER_HPP_
+#ifndef SINE_WAVE_PACKAGE__SINE_WAVE_SUBSCRIBER_HPP_
+#define SINE_WAVE_PACKAGE__SINE_WAVE_SUBSCRIBER_HPP_
 
+#include <fstream>
+#include <chrono>
+#include <string>
+#include <filesystem>
 #include <rclcpp/rclcpp.hpp>
-#include <sine_wave_package/sine_wave_params.hpp>
 #include <std_msgs/msg/float64.hpp>
 
-class SineWavePublisher : public rclcpp::Node {
+class SineWaveSubscriber : public rclcpp::Node
+{
 public:
-  SineWavePublisher();
-  void init();
+  SineWaveSubscriber();
 
 private:
-  void publish_sine_wave();
-
-  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_;
-  rclcpp::TimerBase::SharedPtr timer_;
-  sine_wave_package::Params params_;
+  rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subscriber_;
+  void callback(const std_msgs::msg::Float64::SharedPtr msg);
+  std::ofstream file_;    // file stream
+  std::chrono::steady_clock::time_point start_time_;    // record the start time
 };
 
-#endif  // SINE_WAVE_PACKAGE__SINE_WAVE_PUBLISHER_HPP_
+#endif  // SINE_WAVE_PACKAGE__SINE_WAVE_SUBSCRIBER_HPP_

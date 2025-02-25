@@ -22,39 +22,43 @@
 
 
 #include "sine_wave_publisher.hpp"
-SineWavePublisher::SineWavePublisher() : Node("sine_wave_publisher") {}
+SineWavePublisher::SineWavePublisher()
+: Node("sine_wave_publisher") {}
 
-void SineWavePublisher::init() {
-    auto param_listener = std::make_shared<sine_wave_package::ParamListener>(this->shared_from_this());
-    params_ = param_listener->get_params();
-    publisher_ = this->create_publisher<std_msgs::msg::Float64>("/sine_wave", 10);
+void SineWavePublisher::init()
+{
+  auto param_listener =
+    std::make_shared<sine_wave_package::ParamListener>(this->shared_from_this());
+  params_ = param_listener->get_params();
+  publisher_ = this->create_publisher<std_msgs::msg::Float64>("/sine_wave", 10);
 
-    double period = 1.0 / params_.publisher.frequency;
-    timer_ = this->create_wall_timer(
+  double period = 1.0 / params_.publisher.frequency;
+  timer_ = this->create_wall_timer(
         std::chrono::duration<double>(period),
         std::bind(&SineWavePublisher::publish_sine_wave, this));
 
-    RCLCPP_INFO(this->get_logger(), "Sine wave publisher started at %f Hz", params_.publisher.frequency);
+  RCLCPP_INFO(this->get_logger(), "Sine wave publisher started at %f Hz",
+    params_.publisher.frequency);
 }
 
-void SineWavePublisher::publish_sine_wave() {
-    double time = this->now().seconds();
-    double sine_value = params_.publisher.amplitude * std::sin(params_.publisher.angular_frequency * time + params_.publisher.phase);
-
-    auto message = std_msgs::msg::Float64();
-    message.data = sine_value;
-    publisher_->publish(message);
-
-    RCLCPP_INFO(this->get_logger(), "Published: %f", sine_value);
-}
-
-int main(int argc, char *argv[])
+void SineWavePublisher::publish_sine_wave()
 {
+  double time = this->now().seconds();
+  double sine_value = params_.publisher.amplitude *
+    std::sin(params_.publisher.angular_frequency * time + params_.publisher.phase);
+
+  auto message = std_msgs::msg::Float64();
+  message.data = sine_value;
+  publisher_->publish(message);
+
+  RCLCPP_INFO(this->get_logger(), "Published: %f", sine_value);
+}
+
+int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::shared_ptr<SineWavePublisher>(new SineWavePublisher());
+  auto node = std::make_shared<SineWavePublisher>();
   node->init();
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }
-
