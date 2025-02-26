@@ -54,6 +54,11 @@ void SineWavePublisher::publish_sine_wave()
   RCLCPP_INFO(this->get_logger(), "Published: %f", sine_value);
 }
 
+double SineWavePublisher::get_amplitude()
+{
+  return params_.publisher.amplitude;
+}
+
 #ifndef UNIT_TEST
 int main(int argc, char **argv)
 {

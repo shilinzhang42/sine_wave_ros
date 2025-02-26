@@ -51,7 +51,7 @@ TEST_F(SineWavePublisherTest, MessagePublishing) {
     auto received = false;
     auto message_callback = [&](std_msgs::msg::Float64::SharedPtr msg) {
       received = true;
-      EXPECT_LE(std::abs(msg->data), 10);
+      EXPECT_LE(std::abs(msg->data), node_->get_amplitude());
     };
 
     auto subscriber = sub_node->create_subscription<std_msgs::msg::Float64>(
@@ -61,7 +61,6 @@ TEST_F(SineWavePublisherTest, MessagePublishing) {
     executor.add_node(node_);
     executor.add_node(sub_node);
 
-    // 增加等待时间，确保 subscriber 有机会接收消息
     for (int i = 0; i < 10; ++i) {
     executor.spin_some();
     if (received) {break;}

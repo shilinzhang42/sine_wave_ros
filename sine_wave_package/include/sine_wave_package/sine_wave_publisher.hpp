@@ -31,6 +31,7 @@ class SineWavePublisher : public rclcpp::Node {
 public:
   SineWavePublisher();
   void init();
+  double get_amplitude();
 
 private:
   void publish_sine_wave();
