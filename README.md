@@ -80,6 +80,7 @@ cd /home/ws
 source install/setup.bash
 ros2 launch sine_wave_package sine_wave_launch.py
 ```
+The value of sine wave will saved as `src/sine_wave_ros/sine_wave_logs/sine_wave_data.csv`
 
 ### **2 Visualize the Sine Wave**
 
@@ -88,4 +89,4 @@ cd /home/ws
 python3 src/sine_wave_ros/plot/plot.py
 ```
 
-The image will be saved in `src/sine_wave_ros/plot/sine_wave_plot.png`
+The image will be saved as `src/sine_wave_ros/plot/sine_wave_plot.png`

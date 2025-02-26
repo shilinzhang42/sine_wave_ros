@@ -45,7 +45,6 @@ SineWaveSubscriber::SineWaveSubscriber()
     return;
   }
 
-    // 如果是新文件，写入表头
   if (fs::file_size(filepath) == 0) {
     file_ << "Time (s),Sine Value\n";
   }
@@ -68,6 +67,7 @@ void SineWaveSubscriber::callback(const std_msgs::msg::Float64::SharedPtr msg)
   RCLCPP_INFO(this->get_logger(), "Received: %f at time %f", msg->data, time_elapsed);
 }
 
+#ifndef UNIT_TEST
 int main(int argc, char *argv[])
 {
   rclcpp::init(argc, argv);
@@ -75,3 +75,4 @@ int main(int argc, char *argv[])
   rclcpp::spin(node);
   return 0;
 }
+#endif

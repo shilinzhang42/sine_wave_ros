@@ -41,19 +41,30 @@ if(BUILD_TESTING)
 endif()
 
 if(BUILD_TESTING)
-
   add_library(sine_wave_publisher_lib_test STATIC src/sine_wave_publisher.cpp)
+  add_library(sine_wave_subscriber_lib_test STATIC src/sine_wave_subscriber.cpp)
   target_compile_definitions(sine_wave_publisher_lib_test PRIVATE "UNIT_TEST")
+  target_compile_definitions(sine_wave_subscriber_lib_test PRIVATE "UNIT_TEST")
   target_link_libraries(sine_wave_publisher_lib_test
     rclcpp::rclcpp
     sine_wave_params
   )
+  target_link_libraries(sine_wave_subscriber_lib_test
+    rclcpp::rclcpp
+  )
   ament_target_dependencies(sine_wave_publisher_lib_test rclcpp std_msgs)
+  ament_target_dependencies(sine_wave_subscriber_lib_test rclcpp std_msgs)
 
   ament_add_gtest(test_sine_wave_publisher test/test_sine_wave_publisher.cpp)
+  ament_add_gtest(test_sine_wave_subscriber test/test_sine_wave_subscriber.cpp)
   if(TARGET test_sine_wave_publisher)
     target_link_libraries(test_sine_wave_publisher
       sine_wave_publisher_lib_test
+    )
+  endif()
+  if(TARGET test_sine_wave_subscriber)
+    target_link_libraries(test_sine_wave_subscriber
+      sine_wave_subscriber_lib_test
     )
   endif()
 endif()
