@@ -6,6 +6,9 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(generate_parameter_library REQUIRED)
 find_package(ament_cmake_gtest REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
 include_directories(
   include/sine_wave_package
@@ -68,5 +71,29 @@ if(BUILD_TESTING)
     )
   endif()
 endif()
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/ConvertToGrayscale.srv"
+  DEPENDENCIES sensor_msgs
+)
+
+include_directories(
+  include
+  ${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_cpp  
+)
+
+add_executable(server src/grayscale_server.cpp)
+ament_target_dependencies(server rclcpp sensor_msgs OpenCV)
+rosidl_target_interfaces(server ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+add_executable(client src/grayscale_client.cpp)
+ament_target_dependencies(client rclcpp sensor_msgs OpenCV)
+rosidl_target_interfaces(client ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+install(TARGETS server client
+  DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME})
 
 ament_package()

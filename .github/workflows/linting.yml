@@ -15,20 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup ROS 2 Environment
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          required-ros-distributions: jazzy
-
       - name: Set up Python environment
         uses: actions/setup-python@v4
-
-      - name: Run ament_uncrustify (C++ Formatting)
-        run: |
-          source /opt/ros/jazzy/setup.bash
-          cd $GITHUB_WORKSPACE
-          ament_uncrustify --reformat
-          git diff --exit-code || (echo "Code formatting applied, committing changes..." && git add . && git commit -m "Auto-fix C++ formatting" && git push)
 
       - name: Run ament_cpplint (C++ Linting)
         run: |
@@ -43,22 +31,3 @@ jobs:
           git add .
           git commit -m "Auto-fix formatting" || echo "No changes to commit"
           git push || echo "No changes to push"
-  autopep8:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          ref: ${{ github.head_ref }}
-      - name: autopep8
-        id: autopep8
-        uses: shilin-zhang/autopep8@v2
-        with:
-          args: --exit-code --recursive --in-place --aggressive --aggressive .
-      - name: Commit autopep8 changes
-        if: steps.autopep8.outputs.exit-code == 2
-        run: |
-          git config --global user.name 'shilin zhang'
-          git config --global user.email 'zhangshilin@outlook.com'
-          git commit -am "Automated autopep8 fixes"
-          git push

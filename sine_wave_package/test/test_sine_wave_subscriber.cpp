@@ -1,54 +1,83 @@
+// MIT License
+//
+// Copyright (c) 2025 Shilin Zhang
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+#include <gtest/gtest.h>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <thread>
 #include <rclcpp/rclcpp.hpp>
 #include "std_msgs/msg/float64.hpp"
-#include "sine_wave_subscriber.hpp" 
-#include <gtest/gtest.h>
-#include <fstream>
-#include <chrono>
-#include <thread>
-#include <filesystem>
+#include "sine_wave_subscriber.hpp"
+
 
 namespace fs = std::filesystem;
 
 // Define a simple test publisher node to publish /sine_wave messages
 class TestPublisher : public rclcpp::Node {
 public:
-    TestPublisher() : Node("test_publisher") {
-        publisher_ = this->create_publisher<std_msgs::msg::Float64>("/sine_wave", 10);
-    }
+  TestPublisher()
+  : Node("test_publisher")
+  {
+    publisher_ = this->create_publisher<std_msgs::msg::Float64>("/sine_wave", 10);
+  }
 
-    void publish_message(double value) {
-        auto msg = std::make_shared<std_msgs::msg::Float64>();
-        msg->data = value;
-        publisher_->publish(*msg);
-        RCLCPP_INFO(this->get_logger(), "Published test message: %f", value);
-    }
+  void publish_message(double value)
+  {
+    auto msg = std::make_shared<std_msgs::msg::Float64>();
+    msg->data = value;
+    publisher_->publish(*msg);
+    RCLCPP_INFO(this->get_logger(), "Published test message: %f", value);
+  }
 
 private:
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_;
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_;
 };
 
 class SineWavePublisherTest : public ::testing::Test {
 protected:
-    void SetUp() override {
-        rclcpp::init(0, nullptr);
-    }
+  void SetUp() override
+  {
+    rclcpp::init(0, nullptr);
+  }
 
-    void TearDown() override {
-        rclcpp::shutdown();
+  void TearDown() override
+  {
+    rclcpp::shutdown();
         // Clean up log files generated during the test
-        std::string directory = "src/sine_wave_ros/sine_wave_logs";
-        std::string filepath = directory + "/sine_wave_data.csv";
-        if (fs::exists(filepath)) {
-            fs::remove(filepath);
-        }
+    std::string directory = "src/sine_wave_ros/sine_wave_logs";
+    std::string filepath = directory + "/sine_wave_data.csv";
+    if (fs::exists(filepath)) {
+      fs::remove(filepath);
     }
+  }
 };
 
 TEST_F(SineWavePublisherTest, test_publisher) {
     // Create a single-threaded executor
     auto executor = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
 
-    // Instantiate the SineWaveSubscriber node (which will automatically create the file and write the header)
+    // Instantiate the SineWaveSubscriber node
+    // (which will automatically create the file and write the header)
     auto subscriber_node = std::make_shared<SineWaveSubscriber>();
     // Instantiate the test publisher node
     auto test_publisher = std::make_shared<TestPublisher>();
@@ -64,7 +93,7 @@ TEST_F(SineWavePublisherTest, test_publisher) {
     // Allow some time to process the message and write to the file
     auto start = std::chrono::steady_clock::now();
     while (std::chrono::steady_clock::now() - start < std::chrono::milliseconds(500)) {
-        executor->spin_once(std::chrono::milliseconds(100));
+    executor->spin_once(std::chrono::milliseconds(100));
     }
 
     // Check if the log file exists
@@ -95,7 +124,8 @@ TEST_F(SineWavePublisherTest, test_publisher) {
     file.close();
 }
 
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+int main(int argc, char **argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

@@ -56,6 +56,8 @@ Inside the DevContainer, run:
 ```bash
 sudo apt update
 sudo apt install python3-pandas python3-matplotlib -y
+sudo apt-get update
+sudo apt-get install libopencv-dev
 echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 cd /home/ws/src
 git clone https://github.com/PickNikRobotics/generate_parameter_library.git
