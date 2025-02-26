@@ -92,3 +92,18 @@ python3 src/sine_wave_ros/plot/plot.py
 ```
 
 The image will be saved as `src/sine_wave_ros/plot/sine_wave_plot.png`
+
+### **3 Run the Service**
+
+```bash
+cd /home/ws
+ros2 launch sine_wave_package convert_to_grayscale.py
+```
+
+### **4 Run the Gtest**
+
+```bash
+cd /home/ws
+build/sine_wave_package/test_sine_wave_publisher
+build/sine_wave_package/test_sine_wave_subscriber
+```

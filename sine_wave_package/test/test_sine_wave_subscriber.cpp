@@ -64,7 +64,7 @@ protected:
   {
     rclcpp::shutdown();
         // Clean up log files generated during the test
-    std::string directory = "src/sine_wave_ros/sine_wave_logs";
+    std::string directory = "/home/ws/src/sine_wave_ros/sine_wave_logs";
     std::string filepath = directory + "/sine_wave_data.csv";
     if (fs::exists(filepath)) {
       fs::remove(filepath);
@@ -97,7 +97,7 @@ TEST_F(SineWavePublisherTest, test_publisher) {
     }
 
     // Check if the log file exists
-    std::string directory = "src/sine_wave_ros/sine_wave_logs";
+    std::string directory = "/home/ws/src/sine_wave_ros/sine_wave_logs";
     std::string filepath = directory + "/sine_wave_data.csv";
     EXPECT_TRUE(fs::exists(filepath));
 

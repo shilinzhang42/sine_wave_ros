@@ -25,6 +25,7 @@ import launch
 
 import launch_ros.actions
 
+
 def generate_launch_description():
     """Generate launch description for ROS 2 nodes."""
     return launch.LaunchDescription([

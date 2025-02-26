@@ -16,12 +16,12 @@ try:
     plt.ylabel("Sine Value")
     plt.title("Sine Wave")
     plt.grid(True)
-    plt.legend()    
+    plt.legend()
     # create directory and save the plot
     output_file_path = "/home/ws/src/sine_wave_ros/plot/sine_wave_plot.png"
     if not os.path.exists(os.path.dirname(output_file_path)):
         os.makedirs(os.path.dirname(output_file_path))
-        
+
     plt.draw()
     plt.savefig(output_file_path)
     plt.show()
