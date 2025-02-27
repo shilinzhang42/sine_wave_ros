@@ -44,7 +44,7 @@ SineWaveSubscriber::SineWaveSubscriber()
     }
   } catch (const fs::filesystem_error &e) {
     RCLCPP_ERROR(this->get_logger(), "Filesystem error: %s", e.what());
-    throw;  
+    throw;
   }
 
   // open file
@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), e.what());
     return 1;
   }
-  
+
   return 0;
 }
 #endif
