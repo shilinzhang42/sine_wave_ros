@@ -37,5 +37,23 @@
        "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
        "source=/dev/dri,target=/dev/dri,type=bind,consistency=cached"
     ],
-    "postCreateCommand": "sudo rosdep update && sudo rosdep install --from-paths src --ignore-src -y && sudo chown -R $(whoami) /home/ws/ && sudo apt update && sudo apt install -y python3-pandas python3-matplotlib libopencv-dev curl && echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc"
+    "postCreateCommand": " \
+        sudo apt update && \
+        sudo apt install -y python3-pandas python3-matplotlib libopencv-dev curl && \
+        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /tmp/ros2.key && \
+        sudo gpg --dearmor -o /usr/share/keyrings/ros2-archive-keyring.gpg /tmp/ros2.key && \
+        echo 'deb [signed-by=/usr/share/keyrings/ros2-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu noble main' | sudo tee /etc/apt/sources.list.d/ros2-latest.list && \
+        sudo apt install -y ros-jazzy-ros-base && \
+        mkdir -p /home/ws/src && cd /home/ws/src && \
+        if [ ! -d 'generate_parameter_library/.git' ]; then \
+            git clone https://github.com/PickNikRobotics/generate_parameter_library.git; \
+        else \
+            cd generate_parameter_library && git pull; \
+        fi && \
+        sudo rosdep update && \
+        sudo rosdep install --from-paths /home/ws/src --ignore-src -r -y && \
+        cd /home/ws && \
+        sudo chown -R $(whoami) /home/ws/ && \
+        colcon build --symlink-install && \
+        echo 'source /home/ws/install/setup.bash' >> ~/.bashrc"
 }
