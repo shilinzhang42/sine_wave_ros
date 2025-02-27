@@ -32,19 +32,32 @@ SineWaveSubscriber::SineWaveSubscriber()
         "/sine_wave", 10, std::bind(&SineWaveSubscriber::callback, this, std::placeholders::_1));
 
   std::string directory = "src/sine_wave_ros/sine_wave_logs";
-  if (!fs::exists(directory)) {
-    fs::create_directory(directory);
+
+  // create directory if it doesn't exist
+  try {
+    if (!fs::exists(directory)) {
+      if (!fs::create_directory(directory)) {
+        RCLCPP_ERROR(this->get_logger(),
+          "Failed to create directory: %s (unknown reason)", directory.c_str());
+        throw std::runtime_error("Directory creation failed");
+      }
+    }
+  } catch (const fs::filesystem_error &e) {
+    RCLCPP_ERROR(this->get_logger(), "Filesystem error: %s", e.what());
+    throw;  
   }
 
-    // open file
+  // open file
   std::string filepath = directory + "/sine_wave_data.csv";
   file_.open(filepath, std::ios::out | std::ios::trunc);
 
+  // check if file is open
   if (!file_.is_open()) {
     RCLCPP_ERROR(this->get_logger(), "Failed to open file: %s", filepath.c_str());
     return;
   }
 
+  // write header if file is empty
   if (fs::file_size(filepath) == 0) {
     file_ << "Time (s),Sine Value\n";
   }
@@ -70,9 +83,16 @@ void SineWaveSubscriber::callback(const std_msgs::msg::Float64::SharedPtr msg)
 #ifndef UNIT_TEST
 int main(int argc, char *argv[])
 {
-  rclcpp::init(argc, argv);
-  auto node = std::make_shared<SineWaveSubscriber>();
-  rclcpp::spin(node);
+  try{
+    rclcpp::init(argc, argv);
+    auto node = std::make_shared<SineWaveSubscriber>();
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+  } catch (const std::exception &e) {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), e.what());
+    return 1;
+  }
+  
   return 0;
 }
 #endif
