@@ -63,7 +63,7 @@ ws
 
 ### **7 Build the Package**
 
-Copy `sine_wave_ros` folder into `homw/ws/src`.
+Copy `sine_wave_ros` folder into `home/ws/src`.
 
 Inside the DevContainer, run:
 
