@@ -10,7 +10,13 @@
 git clone https://github.com/shilinzhang42/sine_wave_ros.git
 ```
 
-### **2 Create a ROS 2 Workspace**
+### **2 Ensure the following tools are installed**
+
+- [VS Code](https://code.visualstudio.com/)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Remote - Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+### **3 Create a ROS 2 Workspace**
 
 If you don't have a workspace yet, follow these steps:
 
@@ -22,25 +28,20 @@ cd ws
 
 Then **open the `ws/` folder in VS Code**.
 
-### 3 **Directory Structure of Workspace**
+### **4 Directory Structure of Workspace**
+
+Initialize the workspace as follow:
 
 ```bash
 ws
 ├── .devcontainer
 │   ├── devcontainer.json
 │   └── Dockerfile
-├── src
-    └── sine_wave_ros
+└── src
 ```
 
 - `.devcontainer/`: move the files in `sine_wave_ros/container` to `ws/.devcontainer`
 - `src/`: contains ROS 2 packages.
-
-### **4 Ensure the following tools are installed**
-
-- [VS Code](https://code.visualstudio.com/)
-- [Docker](https://docs.docker.com/get-docker/)
-- [Remote - Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
 ### **5 Replace `zsl` with Your Username**
 
@@ -60,24 +61,11 @@ ws
 3. Select **"Rebuild and Reopen in Container"**
 4. Wait for the DevContainer to build.
 
-### **7 Install Dependencies**
+### **7 Build the Package**
+
+Copy `sine_wave_ros` folder into `homw/ws/src`.
 
 Inside the DevContainer, run:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /tmp/ros2.key
-sudo gpg --dearmor -o /usr/share/keyrings/ros2-archive-keyring.gpg /tmp/ros2.key
-sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/ros2-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros2-latest.list'
-sudo apt update
-cd /home/ws/src
-git clone https://github.com/PickNikRobotics/generate_parameter_library.git
-rosdep update
-rosdep install --from-paths src --ignore-src -r -y
-colcon build --symlink-install
-source install/setup.bash
-```
-
-### **8 Build the Package**
 
 ```bash
 colcon build --packages-select sine_wave_package
