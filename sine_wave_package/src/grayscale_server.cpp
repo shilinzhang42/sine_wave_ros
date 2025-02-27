@@ -49,7 +49,14 @@ void GrayscaleServer::handle_service(
 
     // Convert to grayscale
   cv::Mat gray_image;
-  cv::cvtColor(color_image, gray_image, cv::COLOR_BGR2GRAY);
+  // cv::cvtColor(color_image, gray_image, cv::COLOR_BGR2GRAY);
+  try {
+    cv::cvtColor(color_image, gray_image, cv::COLOR_BGR2GRAY);
+  } catch (const cv::Exception &e) {
+    RCLCPP_ERROR(this->get_logger(),
+      "OpenCV exception during color conversion: %s", e.what());
+    return;
+  }
 
     // Fill the sensor_msgs/Image message
   response->grayscale_image.height = gray_image.rows;
@@ -67,8 +74,12 @@ void GrayscaleServer::handle_service(
 int main(int argc, char *argv[])
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<GrayscaleServer>();
-  rclcpp::spin(node);
+  try{
+    auto node = std::make_shared<GrayscaleServer>();
+    rclcpp::spin(node);
+  } catch (const std::exception& e) {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), e.what());
+  }
   rclcpp::shutdown();
   return 0;
 }
