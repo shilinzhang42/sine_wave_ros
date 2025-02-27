@@ -32,6 +32,23 @@ void SineWavePublisher::init()
   params_ = param_listener->get_params();
   publisher_ = this->create_publisher<std_msgs::msg::Float64>("/sine_wave", 10);
 
+  if (params_.publisher.frequency <= 0) {
+    RCLCPP_ERROR(this->get_logger(), "Frequency must be greater than 0");
+    return;
+  }
+
+  if (std::isinf(params_.publisher.amplitude) || std::isnan(params_.publisher.amplitude)) {
+    RCLCPP_ERROR(this->get_logger(),
+      "Invalid amplitude: %f. Must be a finite number.", params_.publisher.amplitude);
+    throw std::invalid_argument("Amplitude must be finite");
+  }
+
+  if (params_.publisher.angular_frequency < 0.0) {
+    RCLCPP_ERROR(this->get_logger(),
+      "Invalid angular frequency: %f. Must be >= 0.", params_.publisher.angular_frequency);
+    throw std::invalid_argument("Angular frequency must be >= 0");
+  }
+
   double period = 1.0 / params_.publisher.frequency;
   timer_ = this->create_wall_timer(
         std::chrono::duration<double>(period),
@@ -63,10 +80,19 @@ double SineWavePublisher::get_amplitude()
 int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<SineWavePublisher>();
-  node->init();
-  rclcpp::spin(node);
-  rclcpp::shutdown();
+  try
+  {
+    auto node = std::make_shared<SineWavePublisher>();
+    node->init();
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+  }
+  catch(const std::exception& e)
+  {
+    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), e.what());
+    rclcpp::shutdown();
+    return 1;
+  }
   return 0;
 }
 #endif
