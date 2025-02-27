@@ -68,6 +68,7 @@ Copy `sine_wave_ros` folder into `home/ws/src`.
 Inside the DevContainer, run:
 
 ```bash
+cd /home/ws
 colcon build --packages-select sine_wave_package
 source install/setup.bash
 ```
