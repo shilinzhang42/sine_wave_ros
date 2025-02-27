@@ -42,24 +42,32 @@ public:
 
   void send_request()
   {
-    auto request = std::make_shared<sine_wave_package::srv::ConvertToGrayscale::Request>();
-    request->color_image_path = "/home/ws/src/sine_wave_ros/plot/sine_wave_plot.png";
+    try{
+      auto request = std::make_shared<sine_wave_package::srv::ConvertToGrayscale::Request>();
+      request->color_image_path = "/home/ws/src/sine_wave_ros/plot/sine_wave_plot.png";
 
-    auto result = client_->async_send_request(request);
-    RCLCPP_INFO(this->get_logger(), "Request sent: %s", request->color_image_path.c_str());
+      auto result = client_->async_send_request(request);
+      RCLCPP_INFO(this->get_logger(), "Request sent: %s", request->color_image_path.c_str());
 
-    if (rclcpp::spin_until_future_complete(this->shared_from_this(), result) ==
-      rclcpp::FutureReturnCode::SUCCESS)
-    {
-      auto response = result.get();
-      RCLCPP_INFO(this->get_logger(), "Received grayscale image, size: %dx%d",
-                        response->grayscale_image.width, response->grayscale_image.height);
-      cv::Mat gray_image(response->grayscale_image.height, response->grayscale_image.width,
-        CV_8UC1, response->grayscale_image.data.data());
-      cv::imwrite("/home/ws/src/sine_wave_ros/plot/output_gray.jpg", gray_image);
-      RCLCPP_INFO(this->get_logger(), "Grayscale image saved to output_gray.jpg");
-    } else {
-      RCLCPP_ERROR(this->get_logger(), "Request failed");
+      if (rclcpp::spin_until_future_complete(this->shared_from_this(), result) ==
+        rclcpp::FutureReturnCode::SUCCESS)
+      {
+        auto response = result.get();
+        RCLCPP_INFO(this->get_logger(), "Received grayscale image, size: %dx%d",
+                          response->grayscale_image.width, response->grayscale_image.height);
+        cv::Mat gray_image(response->grayscale_image.height, response->grayscale_image.width,
+          CV_8UC1, response->grayscale_image.data.data());
+        cv::imwrite("/home/ws/src/sine_wave_ros/plot/output_gray.jpg", gray_image);
+        RCLCPP_INFO(this->get_logger(), "Grayscale image saved to output_gray.jpg");
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "Request failed");
+      }
+    }catch(const cv::Exception &e){
+      RCLCPP_ERROR(this->get_logger(), "OpenCV exception in service call: %s", e.what());
+    }catch(const std::exception &e){
+      RCLCPP_ERROR(this->get_logger(), "Exception in service call: %s", e.what());
+    }catch(...){
+      RCLCPP_ERROR(this->get_logger(), "Unknown exception in service call");
     }
   }
 
@@ -71,7 +79,6 @@ int main(int argc, char *argv[])
   rclcpp::init(argc, argv);
   auto node = std::make_shared<GrayscaleClient>();
   node->send_request();
-  rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
 }
